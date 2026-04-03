@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import logging
 import sys
+from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
@@ -26,6 +27,28 @@ logger = logging.getLogger(__name__)
 
 
 # ---------------------------------------------------------------------------
+# Lifespan  (replaces deprecated @app.on_event)
+# ---------------------------------------------------------------------------
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    """Startup logic runs before yield; shutdown logic after."""
+    logger.info("Starting SQL-Gen API (env=%s)", settings.APP_ENV)
+
+    # Eagerly warm up DB connection pool and compile the LangGraph
+    from app.db.mysql import get_sql_database
+    from app.engine.graph import get_graph
+
+    get_sql_database()
+    get_graph()
+    logger.info("Startup complete — ready to serve requests.")
+
+    yield  # ← application runs here
+
+    logger.info("Shutting down SQL-Gen API.")
+
+
+# ---------------------------------------------------------------------------
 # Application factory
 # ---------------------------------------------------------------------------
 
@@ -37,6 +60,7 @@ def create_app() -> FastAPI:
             "secured with JWT and per-school row-level security."
         ),
         version="1.0.0",
+        lifespan=lifespan,                                          # ← modern pattern
         docs_url="/docs" if settings.APP_ENV != "production" else None,
         redoc_url="/redoc" if settings.APP_ENV != "production" else None,
     )
@@ -51,17 +75,6 @@ def create_app() -> FastAPI:
     )
 
     app.include_router(router)
-
-    @app.on_event("startup")
-    async def _startup():
-        logger.info("Starting SQL-Gen API (env=%s)", settings.APP_ENV)
-        # Eagerly initialise the DB connection pool and LangGraph
-        from app.db.mysql import get_sql_database
-        from app.engine.graph import get_graph
-
-        get_sql_database()
-        get_graph()
-        logger.info("Startup complete.")
 
     @app.get("/health", tags=["ops"])
     async def health():

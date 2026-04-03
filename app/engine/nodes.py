@@ -10,9 +10,9 @@ import logging
 from typing import List
 
 import boto3
-from langchain_aws import ChatBedrock
+from langchain_aws import ChatBedrockConverse          # ChatBedrockConverse is preferred in langchain-aws v1
 from langchain_core.output_parsers import StrOutputParser
-from langchain_core.prompts import PromptTemplate
+from langchain_core.prompts import PromptTemplate      # PromptTemplate lives in langchain_core in v1
 
 from app.core.config import settings
 from app.db.mysql import get_sql_database
@@ -32,7 +32,9 @@ logger = logging.getLogger(__name__)
 
 _bedrock_client = boto3.client("bedrock-runtime", region_name=settings.AWS_REGION)
 
-_llm = ChatBedrock(
+# ChatBedrockConverse is the recommended client in langchain-aws >= 0.2
+# It uses the Bedrock Converse API which supports all current Claude models
+_llm = ChatBedrockConverse(
     model=settings.BEDROCK_MODEL_ID,
     client=_bedrock_client,
 )
