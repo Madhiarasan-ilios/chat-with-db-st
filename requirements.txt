@@ -1,0 +1,32 @@
+# Web framework
+fastapi==0.111.0
+uvicorn[standard]==0.29.0
+gunicorn==22.0.0
+
+# Pydantic / settings
+pydantic==2.7.1
+pydantic-settings==2.2.1
+
+# Auth
+python-jose[cryptography]==3.3.0
+
+# LangChain + LangGraph
+langchain==0.2.5
+langchain-community==0.2.5
+langchain-core==0.2.9
+langchain-aws==0.1.6
+langgraph==0.1.5
+
+# Database
+SQLAlchemy==2.0.30
+PyMySQL==1.1.0
+sqlparse==0.5.0
+
+# AWS
+boto3==1.34.115
+
+# GCP (optional – only needed if using Secret Manager)
+google-cloud-secret-manager==2.20.0
+
+# Utilities
+python-dotenv==1.0.1
