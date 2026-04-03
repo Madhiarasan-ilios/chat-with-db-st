@@ -8,7 +8,7 @@ import sqlparse
 from typing import List
 
 from langchain.tools import tool
-from langchain_community.tools import QuerySQLDatabaseTool
+from langchain_community.tools.sql_database.tool import QuerySQLDatabaseTool
 
 from app.db.mysql import get_sql_database
 
