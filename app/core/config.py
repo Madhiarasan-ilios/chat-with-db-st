@@ -52,7 +52,7 @@ class Settings(BaseSettings):
     GCP_PROJECT_ID: str = ""
 
     # ── Database ──────────────────────────────────────────────────────────────
-    DB_HOST: str = "127.0.0.1"
+    DB_HOST: str = "12.25.11.2"
     DB_PORT: int = 3306
     DB_NAME: str = "stm_db"
     DB_USER: str = "app_user"
