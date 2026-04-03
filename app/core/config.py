@@ -60,7 +60,7 @@ class Settings(BaseSettings):
 
     # ── AWS / Bedrock ─────────────────────────────────────────────────────────
     AWS_REGION: str = "ap-south-1"
-    BEDROCK_MODEL_ID: str = "anthropic.claude-3-sonnet-20240229-v1:0"
+    BEDROCK_MODEL_ID: str = "global.qwen.qwen3-235b-a22b-2507-v1:0"
 
     # ── JWT ───────────────────────────────────────────────────────────────────
     JWT_SECRET_KEY: str = "change-me-in-production"
